@@ -64,21 +64,13 @@ def format_to_csv_for_ticks(ticks):
     return '\n'.join(map(lambda x: '{},{},{},{},{}'.format(x[0].strftime('%Y-%m-%d %H:%M:%S.%f'), *x[1:]), ticks))+'\n'
 
 
-def format_to_csv_for_candle(ticks, scale, for_mt4=False):
-    if for_mt4:
-        date_format = '%Y.%m.%d,%H:%M'
-    else:
-        date_format = '%Y-%m-%d %H:%M:%S'
-
+def format_to_csv_for_candle(ticks, scale):
     df = pd.DataFrame(ticks, columns=['Date', 'Ask', 'Bid', 'AskVolume', 'BidVolume'])
     df = df.drop(['Ask', 'AskVolume', 'BidVolume'], axis=1)
     df.set_index('Date', inplace=True)
 
     df_c = df.resample(scale).ohlc()
-    csv_str = df_c.to_csv(header=False, date_format=date_format)
-
-    if for_mt4:
-        csv_str = csv_str.replace('"', '')
+    csv_str = df_c.to_csv(header=False, date_format = '%Y-%m-%d %H:%M:%S')
 
     return csv_str
 
@@ -88,7 +80,6 @@ def main():
     parser = optparse.OptionParser(usage='Usage: python {} [options] <symbol> <start: yyyy-mm-dd> <end: yyyy-mm-dd>'.format(os.path.basename(__file__)))
     parser.add_option('-c', action="store", metavar='time_scale', dest="c", help="candlestick. ex: 1min, 1H, 1D")
     parser.add_option('-d', action="store", metavar='output_dir', dest="d", default='./', help="output directory.")
-    parser.add_option('-m', action="store_true", dest="m", help="when used with c, generate MT4 format csv.")
 
     (options, args) = parser.parse_args()
 
@@ -111,7 +102,7 @@ def main():
             if options.c is None:
                 f.write(format_to_csv_for_ticks(ticks_day))
             else:
-                f.write(format_to_csv_for_candle(ticks_day, options.c, options.m))
+                f.write(format_to_csv_for_candle(ticks_day, options.c))
 
             d += timedelta(days=1)
 

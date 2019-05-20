@@ -1,12 +1,12 @@
 # Download tick from Dukascopy
 This script downloads tick data from [Dukascopy](https://www.dukascopy.com/swiss/english/home/).
+The candlestick csv can be imported by MT4.
 
 ## Files
 * download_tick_from_dukascopy.py
     * download tick data as...
         * tick
         * candlestick (date format is yyyy-mm-dd hh:mm:ss)
-        * candlestick (date format is yyyy.mm.dd,hh:mm)
 
 
 * ticks_to_scale.py (omake)
@@ -31,5 +31,4 @@ Options:
   -h, --help     show this help message and exit
   -c time_scale  candlestick. ex: 1min, 1H, 1D
   -d output_dir  output directory. default="./"
-  -m             when used with c, generate MT4 format csv.
 ```
