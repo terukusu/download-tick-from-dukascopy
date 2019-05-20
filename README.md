@@ -31,5 +31,5 @@ Options:
   -h, --help     show this help message and exit
   -c time_scale  candlestick. ex: 1min, 1H, 1D
   -d output_dir  output directory. default="./"
-  -m             when used with c, generate MT4 format csv.
+  -m             when used with option "-c", generate MT4 format csv.
 ```
