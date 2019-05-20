@@ -6,7 +6,7 @@ This script downloads tick data from [Dukascopy](https://www.dukascopy.com/swiss
     * download tick data as...
         * tick
         * candlestick (date format is yyyy-mm-dd hh:mm:ss)
-        * candlestick (date format is yyyy.mm.dd,hh:mm)
+        * candlestick for MT4 (date format is yyyy.mm.dd,hh:mm)
 
 
 * ticks_to_scale.py (omake)
