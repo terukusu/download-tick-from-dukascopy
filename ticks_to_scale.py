@@ -5,7 +5,7 @@ import pandas as pd
 
 
 def write_csv(df):
-    csv = df.to_csv(header=None, date_format= float_format='%.05f')
+    csv = df.to_csv(header=None, date_format = '%Y-%m-%d %H:%M:%S', float_format='%.05f')
     sys.stdout.write(csv)
 
 
