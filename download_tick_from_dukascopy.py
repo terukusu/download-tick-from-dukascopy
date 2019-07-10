@@ -1,4 +1,4 @@
-import lzma
+from lzma import LZMADecompressor, LZMAError, FORMAT_AUTO
 import optparse
 import os
 import struct
@@ -8,6 +8,27 @@ from urllib.error import HTTPError
 
 # 3rd party modules
 import pandas as pd
+
+
+def decompress_lzma(data):
+    results = []
+    len(data)
+    while True:
+        decomp = LZMADecompressor(FORMAT_AUTO, None, None)
+        try:
+            res = decomp.decompress(data)
+        except LZMAError:
+            if results:
+                break
+            else:
+                raise
+        results.append(res)
+        data = decomp.unused_data
+        if not data:
+            break
+        if not decomp.eof:
+            raise LZMAError("Compressed data ended before the end-of-stream marker was reached")
+    return b"".join(results)
 
 
 def tokenize(buffer):
@@ -47,11 +68,14 @@ def download_ticks(symbol, day):
             print('download failed. continuing..')
             continue
 
-        try:
-            data = lzma.decompress(res_body)
-        except lzma.LZMAError:
-            print('decompress failed. continuing..')
-            continue
+        if len(res_body):
+            try:
+                data = decompress_lzma(res_body)
+            except LZMAError:
+                print('decompress failed. continuing..')
+                continue
+        else:
+            data = []
 
         tokenized_data = tokenize(data)
         ticks_hour = list(map(lambda x: normalize_tick(symbol, day + timedelta(hours=h), *x), tokenized_data))
@@ -67,6 +91,7 @@ def format_to_csv_for_ticks(ticks):
 def format_to_csv_for_candle(ticks, scale):
     df = pd.DataFrame(ticks, columns=['Date', 'Ask', 'Bid', 'AskVolume', 'BidVolume'])
     df = df.drop(['Ask', 'AskVolume', 'BidVolume'], axis=1)
+    df['Date'] = pd.to_datetime(df['Date'])
     df.set_index('Date', inplace=True)
 
     df_c = df.resample(scale).ohlc()
