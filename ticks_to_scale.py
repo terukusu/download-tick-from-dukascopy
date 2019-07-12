@@ -13,7 +13,7 @@ def main():
 
     if len(sys.argv) < 3:
         sys.stderr.write('Usage: python {} <ticks csv file> <time scale>\n'.format(os.path.basename(__file__)))
-        sys.stderr.write('\ttime series: ex. 1min, 1H, 1D, etcetc...')
+        sys.stderr.write('\ttime series: ex. 1min, 1H, 1D, etcetc...\n')
         exit(1)
 
     ticks_file = sys.argv[1]
