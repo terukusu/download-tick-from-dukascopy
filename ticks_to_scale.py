@@ -1,6 +1,8 @@
 import os
 import sys
 
+from datetime import datetime
+
 import pandas as pd
 
 
@@ -28,7 +30,8 @@ def main():
         dtype={'Date': 'object', 'Ask': 'float', 'Bid': 'float', 'AskVolume': 'int', 'BidVolume': 'int'},
         usecols=['Date', 'Bid'],
         parse_dates=['Date'],
-        chunksize=10**5)
+        infer_datetime_format=True,
+        chunksize=10**6)
 
     for df in df_chunks:
 
@@ -49,12 +52,14 @@ def main():
 
         if df_future_month.size > 0:
             df_ohlc = df_prev.resample(time_scale).ohlc()
-            write_csv(df_ohlc)
+            df_ohlcv = df_ohlc.assign(Volume=df_prev.iloc[:, 0].resample(time_scale).count())
+            write_csv(df_ohlcv)
             df_prev = df_future_month
 
     if df_prev.size > 0:
         df_ohlc = df_prev.resample(time_scale).ohlc()
-        write_csv(df_ohlc)
+        df_ohlcv = df_ohlc.assign(Volume=df_prev.iloc[:, 0].resample(time_scale).count())
+        write_csv(df_ohlcv)
 
 
 if __name__ == '__main__':
