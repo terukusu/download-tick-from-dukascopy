@@ -29,6 +29,6 @@ Usage: python download_tick_from_dukascopy.py [options] <symbol> <start: yyyy-mm
 
 Options:
   -h, --help     show this help message and exit
-  -c time_scale  candlestick. ex: 1min, 1H, 1D
+  -c time_scale  download as candlestick. ex: 1min, 1H, 1D. if not specified, download as tick.
   -d output_dir  output directory. default="./"
 ```
